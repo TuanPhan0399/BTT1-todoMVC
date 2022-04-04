@@ -1,0 +1,140 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-image: linear-gradient(120deg, #8baaa6, #49a196);
+    font-family: 'Poppins', sans-serif;
+    min-height: 150vh;
+    overflow: hidden;
+}
+
+.header {
+    font-size: 1.5rem;
+}
+
+.header h1{
+    min-height: 20vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.wrapper {
+    max-width: 500px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 7px;
+    padding-top: 28px;
+    padding-bottom: 10px;
+}
+
+.task-input {
+    height: 52px;
+    padding: 0 25px;
+    position: relative;
+}
+.task-input i {
+    position: absolute;
+    top: 50%;
+    transform: translate(20px, -50%);
+    opacity: 0.5;
+    display: none;
+}
+
+.task-input input {
+    height: 100%;
+    width: 100%;
+    font-size: 18px;
+    border-radius: 5px;
+    border: 1px solid #999;
+    padding: 0 20px 0 53px;
+    outline: none;
+}
+
+.task-input input::placeholder{
+    color: #bfbfbf;
+}
+
+.controls {
+    display: none;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 25px;
+}
+.filters span {
+    cursor: pointer;
+    margin: 0 8px;
+    font-size: 17px;
+}
+
+.filters span:first-child {
+    margin-left: 0;
+}
+
+.filters span.active {
+    color: #49a196;
+}
+
+.controls .clear-btn {
+    outline: none;
+    border: none;
+    color: #fff;
+    border-radius: 4px;
+    padding: 7px 13px;
+    background: #49a196;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.task-box{
+    margin: 20px 25px;
+}
+
+.task-box .task {
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 17px;
+    padding-bottom: 16px;
+    margin-bottom: 18px;
+    border-bottom: 1px solid #ccc;
+}
+
+
+.task-box .task:last-child {
+    margin-bottom: 0;
+}
+
+.task label {
+    display: flex;
+}
+
+.task label input {
+    margin-top: 6px;
+    margin-right: 20px;
+}
+
+.task-close {
+    cursor: pointer;
+}
+
+.task-close i {
+    display: none;
+    padding: 5px 0;
+    margin-right: 10px;
+}
+
+.task-box .task:hover i {
+    display: flex;
+}
+
+.completed {
+    text-decoration: line-through;
+    opacity: 0.5;
+}
