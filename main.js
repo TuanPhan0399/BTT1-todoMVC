@@ -5,7 +5,9 @@ const filters = document.querySelectorAll(".filters > span");
 const spanFilter = document.querySelector(".filters > span");
 const controls = document.querySelector(".controls");
 const iTaskInput = document.querySelector(".task-input i");
+const clearAll = document.querySelector(".clear-btn");
 let count = document.querySelector(".count");
+let countIndex;
 
 //Edit task
 let editId;
@@ -14,6 +16,7 @@ let idFilter = "all";
 
 //Even listener
 taskInput.addEventListener("keyup", saveTask);
+clearAll.addEventListener("click", clearAllCompleted);
 
 // Get localStorage todo-list
 let todos = JSON.parse(localStorage.getItem("todo-list"));
@@ -31,28 +34,33 @@ filters.forEach( (btn) => {
 //Function
 function showTodo(filter) {
   let li = "";
+  countIndex = todos.length;
   if (todos) {
     todos.forEach((todo, id) => {
-        // if todo status is completed, set isCompleted value to checked
-        let isCompleted = todo.status == "completed" ? "checked" : "";
-        if(filter === todo.status || filter === "all"){
-          li += `<li class="task">
-                  <div>
-                    <input onclick="updateStatus(this)" type="checkbox" id="${id}" ${isCompleted}>
-                    <p ondblclick="editTask(${id}, '${todo.name}')" class="${isCompleted}">${todo.name}</p>
-                  </div>
-                  <div class="task-close">
-                    <i onclick="deleteTask(${id})" class="fa-solid fa-xmark"></i>
-                  </div>
-                </li>`;
-        }
-      });
+      // handle count
+      if (todo.status == "completed") {
+        countIndex -= 1;
+      }
+      // if todo status is completed, set isCompleted value to checked
+      let isCompleted = todo.status == "completed" ? "checked" : "";
+      if (filter === todo.status || filter === "all") {
+        li += `<li class="task">
+                <div>
+                  <input onclick="updateStatus(this)" type="checkbox" id="${id}" ${isCompleted}>
+                  <p ondblclick="editTask(${id}, '${todo.name}')" class="${isCompleted}">${todo.name}</p>
+                </div>
+                <div class="task-close">
+                  <i onclick="deleteTask(${id})" class="fa-solid fa-xmark"></i>
+                </div>
+              </li>`;
+      }
+    });
   }
   taskBox.innerHTML = li;
   if (todos.length !== 0) {
     controls.style.display = "flex";
     iTaskInput.style.display = "block";
-    count.innerText = todos.length;
+    count.innerText = countIndex;
   } else {
     controls.style.display = "none";
   }
@@ -81,12 +89,14 @@ function updateStatus(selectedTask) {
     taskName.classList.add("checked");
     // updating the status of selected task to completed
     todos[selectedTask.id].status = "completed";
-    countIndex --;
+    countIndex -= 1;
   } else {
     taskName.classList.remove("checked");
     // updating the status of selected task to pending
     todos[selectedTask.id].status = "pending";
+    countIndex += 1;
   }
+  count.innerText = countIndex;
   localStorage.setItem("todo-list", JSON.stringify(todos));
 }
 
@@ -113,4 +123,15 @@ function saveTask(event) {
     localStorage.setItem("todo-list", JSON.stringify(todos));
     showTodo(idFilter);
   } 
+}
+
+function clearAllCompleted () {
+  // removing selected task
+  const todos2 = todos.filter( todo => (todo.status !== 'completed'));
+  todos = todos2;
+  localStorage.setItem("todo-list", JSON.stringify(todos));
+  if (todos.length === 0) {
+    controls.style.display = "none";
+  }
+  showTodo(idFilter);
 }
