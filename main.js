@@ -1,6 +1,8 @@
 //Selectors
 const taskInput = document.querySelector(".task-input input");
 const taskBox = document.querySelector(".task-box");
+const filters = document.querySelectorAll(".filters > span");
+const spanFilter = document.querySelector(".filters > span");
 const controls = document.querySelector(".controls");
 const iTaskInput = document.querySelector(".task-input i");
 let count = document.querySelector(".count");
@@ -8,29 +10,42 @@ let count = document.querySelector(".count");
 //Edit task
 let editId;
 let isEditTask = false;
+let idFilter = "all";
 
 //Even listener
 taskInput.addEventListener("keyup", saveTask);
 
-// Nhận localStorage todo-list
+// Get localStorage todo-list
 let todos = JSON.parse(localStorage.getItem("todo-list"));
 
+// Work with filters
+filters.forEach( (btn) => {
+  btn.addEventListener("click", () => {
+    document.querySelector("span.active").classList.remove("active");
+    btn.classList.add("active");
+    showTodo(btn.id);
+    return idFilter = btn.id;
+  });
+});
+
 //Function
-function showTodo() {
+function showTodo(filter) {
   let li = "";
   if (todos) {
     todos.forEach((todo, id) => {
-        // Nếu todo status là completed, set isCompleted giá trị thành cheked
+        // if todo status is completed, set isCompleted value to checked
         let isCompleted = todo.status == "completed" ? "checked" : "";
-        li += `<li class="task">
-                 <div>
-                   <input onclick="updateStatus(this)" type="checkbox" id="${id}" ${isCompleted}>
-                   <p ondblclick="editTask(${id}, '${todo.name}')" class="${isCompleted}">${todo.name}</p>
-                 </div>
-                 <div class="task-close">
-                   <i onclick="deleteTask(${id})" class="fa-solid fa-xmark"></i>
-                 </div>
-               </li>`
+        if(filter === todo.status || filter === "all"){
+          li += `<li class="task">
+                  <div>
+                    <input onclick="updateStatus(this)" type="checkbox" id="${id}" ${isCompleted}>
+                    <p ondblclick="editTask(${id}, '${todo.name}')" class="${isCompleted}">${todo.name}</p>
+                  </div>
+                  <div class="task-close">
+                    <i onclick="deleteTask(${id})" class="fa-solid fa-xmark"></i>
+                  </div>
+                </li>`;
+        }
       });
   }
   taskBox.innerHTML = li;
@@ -42,7 +57,7 @@ function showTodo() {
     controls.style.display = "none";
   }
 }
-showTodo();
+showTodo(idFilter);
 
 function deleteTask(deleteId) {
   // removing selected task
@@ -51,7 +66,7 @@ function deleteTask(deleteId) {
   if (todos === []) {
     controls.style.display = "none";
   }
-  showTodo();
+  showTodo(idFilter);
 }
 
 function editTask(taskId, taskName) {
@@ -66,6 +81,7 @@ function updateStatus(selectedTask) {
     taskName.classList.add("checked");
     // updating the status of selected task to completed
     todos[selectedTask.id].status = "completed";
+    countIndex --;
   } else {
     taskName.classList.remove("checked");
     // updating the status of selected task to pending
@@ -75,11 +91,11 @@ function updateStatus(selectedTask) {
 }
 
 function saveTask(event) {
-  // Lấy kí tự trừ kí tự rỗng và cách
+  // Do not take spaces and null characters
   let userTask = taskInput.value.trim();
   if (event.key === "Enter" && userTask) {
     if (!isEditTask){
-      // Nếu todos không tồn tại, tạo một mảng rỗng cho todos
+      // if todos don't exits, create empty array to todos
       if (!todos) {
         todos = [];
       }
@@ -87,7 +103,7 @@ function saveTask(event) {
         name: userTask,
         status: "pending",
       };
-      //thêm một task mới vào todos
+      //Add one task new on todos
       todos.push(taskInfo);
     } else {
       isEditTask = false;
@@ -95,6 +111,6 @@ function saveTask(event) {
     }
     taskInput.value = "";
     localStorage.setItem("todo-list", JSON.stringify(todos));
-    showTodo();
+    showTodo(idFilter);
   } 
 }
