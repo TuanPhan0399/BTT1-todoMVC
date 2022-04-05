@@ -111,11 +111,11 @@ body {
     margin-bottom: 0;
 }
 
-.task label {
+.task div {
     display: flex;
 }
 
-.task label input {
+.task div input {
     margin-top: 6px;
     margin-right: 20px;
 }
@@ -125,15 +125,14 @@ body {
 }
 
 .task-close i {
-    display: none;
+    opacity: 0;
     padding: 5px 0;
     margin-right: 10px;
 }
 
 .task-box .task:hover i {
-    display: flex;
+    opacity: 1;
 }
-
 .checked {
     text-decoration: line-through;
     opacity: 0.5;

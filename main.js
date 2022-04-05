@@ -23,26 +23,36 @@ function showTodo() {
         // Nếu todo status là completed, set isCompleted giá trị thành cheked
         let isCompleted = todo.status == "completed" ? "checked" : "";
         li += `<li class="task">
-                 <label for="${id}">
+                 <div>
                    <input onclick="updateStatus(this)" type="checkbox" id="${id}" ${isCompleted}>
                    <p ondblclick="editTask(${id}, '${todo.name}')" class="${isCompleted}">${todo.name}</p>
-                 </label>
+                 </div>
                  <div class="task-close">
-                   <i class="fa-solid fa-xmark"></i>
+                   <i onclick="deleteTask(${id})" class="fa-solid fa-xmark"></i>
                  </div>
                </li>`
       });
   }
   taskBox.innerHTML = li;
-  if (todos !== null) {
+  if (todos.length !== 0) {
     controls.style.display = "flex";
     iTaskInput.style.display = "block";
-  }
-  if (todos !== null) {
     count.innerText = todos.length;
-  } 
+  } else {
+    controls.style.display = "none";
+  }
 }
 showTodo();
+
+function deleteTask(deleteId) {
+  // removing selected task
+  todos.splice(deleteId, 1);
+  localStorage.setItem("todo-list", JSON.stringify(todos));
+  if (todos === []) {
+    controls.style.display = "none";
+  }
+  showTodo();
+}
 
 function editTask(taskId, taskName) {
   editId = taskId;
