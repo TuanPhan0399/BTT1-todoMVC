@@ -44,6 +44,7 @@ body {
     transform: translate(20px, -50%);
     opacity: 0.5;
     display: none;
+    cursor: pointer;
 }
 
 .task-input input {

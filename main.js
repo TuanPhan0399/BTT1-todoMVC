@@ -15,6 +15,7 @@ let idFilter = "all";
 //Even listener
 taskInput.addEventListener("keyup", saveTask);
 clearAll.addEventListener("click", clearAllCompleted);
+iTaskInput.addEventListener("click", takeAll);
 
 // Get localStorage todo-list
 let todos = JSON.parse(localStorage.getItem("todo-list"));
@@ -69,7 +70,7 @@ function deleteTask(deleteId) {
   // removing selected task
   todos.splice(deleteId, 1);
   localStorage.setItem("todo-list", JSON.stringify(todos));
-  if (todos === 0) {
+  if (todos.length === 0) {
     controls.style.display = "none";
     iTaskInput.style.display = "none";
   }
@@ -97,8 +98,16 @@ function editSpan(input) {
   });
 }
 
+// Select all input
+function takeAll () {
+  
+}
+
 function updateStatus(selectedTask) {
+  let liTask = selectedTask.parentElement.parentElement;
   let taskName = selectedTask.parentElement.lastElementChild;
+  let filterActive = filterStatus.filter(e => e.classList[0] === 'active');
+  const filterStatus = Array.from(filters);
   if (selectedTask.checked) {
     taskName.classList.add("checked");
     // updating the status of selected task to completed
@@ -109,6 +118,14 @@ function updateStatus(selectedTask) {
     // updating the status of selected task to pending
     todos[selectedTask.id].status = "pending";
     countIndex += 1;
+  }
+  // fix bug active
+  if (filterActive[0].id === "completed" && selectedTask.checked === false){
+    liTask.style.display = "none";
+  } else if (filterActive[0].id === 'pending' && selectedTask.checked) {
+    liTask.style.display = "none";
+  } else if (filterActive[0].id === 'all') {
+    liTask.style.display = "flex";
   }
   count.innerText = countIndex;
   localStorage.setItem("todo-list", JSON.stringify(todos));
@@ -138,9 +155,10 @@ function clearAllCompleted () {
   // removing selected task
   const todos2 = todos.filter( todo => (todo.status !== 'completed'));
   todos = todos2;
-  localStorage.setItem("todo-list", JSON.stringify(todos));
   if (todos.length === 0) {
+    iTaskInput.style.display = "none";
     controls.style.display = "none";
   }
+  localStorage.setItem("todo-list", JSON.stringify(todos));
   showTodo(idFilter);
 }
