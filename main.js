@@ -7,11 +7,9 @@ const controls = document.querySelector(".controls");
 const iTaskInput = document.querySelector(".task-input i");
 const clearAll = document.querySelector(".clear-btn");
 let count = document.querySelector(".count");
-let countIndex;
 
-//Edit task
-let editId;
-let isEditTask = false;
+// Variable
+let countIndex;
 let idFilter = "all";
 
 //Even listener
@@ -47,7 +45,7 @@ function showTodo(filter) {
         li += `<li class="task">
                 <div>
                   <input onclick="updateStatus(this)" type="checkbox" id="${id}" ${isCompleted}>
-                  <p ondblclick="editTask(${id}, '${todo.name}')" class="${isCompleted}">${todo.name}</p>
+                  <span ondblclick="editTask(this)" class="${id} ${isCompleted}">${todo.name}</span>
                 </div>
                 <div class="task-close">
                   <i onclick="deleteTask(${id})" class="fa-solid fa-xmark"></i>
@@ -71,16 +69,32 @@ function deleteTask(deleteId) {
   // removing selected task
   todos.splice(deleteId, 1);
   localStorage.setItem("todo-list", JSON.stringify(todos));
-  if (todos === []) {
+  if (todos === 0) {
     controls.style.display = "none";
+    iTaskInput.style.display = "none";
   }
   showTodo(idFilter);
 }
 
-function editTask(taskId, taskName) {
-  editId = taskId;
-  isEditTask = true;
-  taskInput.value = taskName;
+// data editing function
+function editTask(span) {
+  let valueInput = span.innerText;
+  span.innerText = "";
+  span.innerHTML += `<input onclick="editSpan(this)" type="text" value="${valueInput}"></input>`;
+}
+
+// new data editting add with local
+function editSpan(input) {
+  let span = input.parentElement;
+  input.addEventListener('keyup', function (event) {
+    if (event.keyCode === 13) {
+      event.preventDefault();
+      span.innerText = input.value.trim();
+      input.style.display = "none";
+      todos[span.classList[0]].name = span.innerText;
+      localStorage.setItem("todo-list", JSON.stringify(todos));
+    }
+  });
 }
 
 function updateStatus(selectedTask) {
@@ -104,21 +118,16 @@ function saveTask(event) {
   // Do not take spaces and null characters
   let userTask = taskInput.value.trim();
   if (event.key === "Enter" && userTask) {
-    if (!isEditTask){
-      // if todos don't exits, create empty array to todos
-      if (!todos) {
-        todos = [];
-      }
-      let taskInfo = {
-        name: userTask,
-        status: "pending",
-      };
-      //Add one task new on todos
-      todos.push(taskInfo);
-    } else {
-      isEditTask = false;
-      todos[editId].name = userTask;
+    // if todos don't exits, create empty array to todos
+    if (!todos) {
+      todos = [];
     }
+    let taskInfo = {
+      name: userTask,
+      status: "pending",
+    };
+    //Add one task new on todos
+    todos.push(taskInfo);
     taskInput.value = "";
     localStorage.setItem("todo-list", JSON.stringify(todos));
     showTodo(idFilter);
