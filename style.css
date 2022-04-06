@@ -46,6 +46,9 @@ body {
     display: none;
     cursor: pointer;
 }
+.task-input i.tick-all {
+  opacity: 1;
+}
 
 .task-input input {
     height: 100%;

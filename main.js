@@ -2,7 +2,6 @@
 const taskInput = document.querySelector(".task-input input");
 const taskBox = document.querySelector(".task-box");
 const filters = document.querySelectorAll(".filters > span");
-const spanFilter = document.querySelector(".filters > span");
 const controls = document.querySelector(".controls");
 const iTaskInput = document.querySelector(".task-input i");
 const clearAll = document.querySelector(".clear-btn");
@@ -100,7 +99,19 @@ function editSpan(input) {
 
 // Select all input
 function takeAll () {
-  
+  if (iTaskInput.classList.contains('tick-all') == false) {
+    iTaskInput.classList.add('tick-all');
+    todos.forEach( todo => {
+      todo.status = "completed";
+    })
+  } else {
+    iTaskInput.classList.remove('tick-all');
+    todos.forEach( todo => {
+      todo.status = "pending";
+    })
+  }
+  localStorage.setItem("todo-list", JSON.stringify(todos));
+  showTodo(idFilter);
 }
 
 function updateStatus(selectedTask) {
@@ -108,6 +119,7 @@ function updateStatus(selectedTask) {
   let taskName = selectedTask.parentElement.lastElementChild;
   const filterStatus = Array.from(filters);
   let filterActive = filterStatus.filter(e => e.classList[0] === 'active');
+  let todo; 
   if (selectedTask.checked) {
     taskName.classList.add("checked");
     // updating the status of selected task to completed
@@ -118,6 +130,13 @@ function updateStatus(selectedTask) {
     // updating the status of selected task to pending
     todos[selectedTask.id].status = "pending";
     countIndex += 1;
+  }
+  // Bug tick all
+  todo = todos.filter( todo => todo.status === "completed");
+  if (todo.length === todos.length) {
+    iTaskInput.classList.add('tick-all');
+  } else {
+    iTaskInput.classList.remove('tick-all');
   }
   // fix bug active
   if (filterActive[0].id === "completed" && selectedTask.checked === false){
@@ -144,6 +163,7 @@ function saveTask(event) {
       status: "pending",
     };
     //Add one task new on todos
+    iTaskInput.classList.remove('tick-all');
     todos.push(taskInfo);
     taskInput.value = "";
     localStorage.setItem("todo-list", JSON.stringify(todos));
