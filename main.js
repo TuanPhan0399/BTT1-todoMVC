@@ -106,8 +106,8 @@ function takeAll () {
 function updateStatus(selectedTask) {
   let liTask = selectedTask.parentElement.parentElement;
   let taskName = selectedTask.parentElement.lastElementChild;
-  let filterActive = filterStatus.filter(e => e.classList[0] === 'active');
   const filterStatus = Array.from(filters);
+  let filterActive = filterStatus.filter(e => e.classList[0] === 'active');
   if (selectedTask.checked) {
     taskName.classList.add("checked");
     // updating the status of selected task to completed
