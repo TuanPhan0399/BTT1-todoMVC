@@ -218,6 +218,7 @@ function clearAllCompleted () {
     iTaskInput.style.display = "none";
     controls.style.display = "none";
   }
+  clearAll.style.opacity = '0';
   localStorage.setItem("todo-list", JSON.stringify(todos));
   showTodo(idFilter);
 }
