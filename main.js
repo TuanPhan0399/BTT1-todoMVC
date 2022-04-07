@@ -114,6 +114,17 @@ function editSpan(input) {
       localStorage.setItem("todo-list", JSON.stringify(todos));
     }
   });
+  // add onblur
+  input.addEventListener('blur', (event) => {
+    event.preventDefault();
+      span.innerText = input.value.trim();
+      input.style.display = "none";
+      // fix bug edit input and task close;
+      taskClose.style.opacity = '1';
+      tickInput.style.opacity = '1';
+      todos[span.classList[0]].name = span.innerText;
+      localStorage.setItem("todo-list", JSON.stringify(todos));
+  })
 }
 
 // Select all input
