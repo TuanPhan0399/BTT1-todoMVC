@@ -32,6 +32,7 @@ filters.forEach( (btn) => {
 //Function
 function showTodo(filter) {
   let li = "";
+  let todo;
   countIndex = todos.length;
   if (todos) {
     todos.forEach((todo, id) => {
@@ -52,7 +53,16 @@ function showTodo(filter) {
                 </div>
               </li>`;
       }
+      if (todo.status === "completed") {
+        clearAll.style.opacity = '1';
+      }
     });
+  }
+  todo = todos.filter(todo => todo.status === "completed");
+  if (todo.length === todos.length) {
+    iTaskInput.classList.add('tick-all');
+  } else {
+    iTaskInput.classList.remove('tick-all');
   }
   taskBox.innerHTML = li;
   if (todos.length !== 0) {
@@ -78,6 +88,10 @@ function deleteTask(deleteId) {
 
 // data editing function
 function editTask(span) {
+  const taskClose = span.parentElement.parentElement.lastElementChild;
+  const input = span.parentElement.firstElementChild;
+  taskClose.style.opacity = '0';
+  input.style.opacity = '0';
   let valueInput = span.innerText;
   span.innerText = "";
   span.innerHTML += `<input onclick="editSpan(this)" type="text" value="${valueInput}"></input>`;
@@ -85,12 +99,17 @@ function editTask(span) {
 
 // new data editting add with local
 function editSpan(input) {
-  let span = input.parentElement;
+  const span = input.parentElement;
+  const taskClose = span.parentElement.parentElement.lastElementChild;
+  let tickInput = span.parentElement.firstElementChild;
   input.addEventListener('keyup', function (event) {
     if (event.keyCode === 13) {
       event.preventDefault();
       span.innerText = input.value.trim();
       input.style.display = "none";
+      // fix bug edit input and task close;
+      taskClose.style.opacity = '1';
+      tickInput.style.opacity = '1';
       todos[span.classList[0]].name = span.innerText;
       localStorage.setItem("todo-list", JSON.stringify(todos));
     }
@@ -100,11 +119,13 @@ function editSpan(input) {
 // Select all input
 function takeAll () {
   if (iTaskInput.classList.contains('tick-all') == false) {
+    clearAll.style.opacity = '1';
     iTaskInput.classList.add('tick-all');
     todos.forEach( todo => {
       todo.status = "completed";
     })
   } else {
+    clearAll.style.opacity = '0';
     iTaskInput.classList.remove('tick-all');
     todos.forEach( todo => {
       todo.status = "pending";
@@ -119,8 +140,10 @@ function updateStatus(selectedTask) {
   let taskName = selectedTask.parentElement.lastElementChild;
   const filterStatus = Array.from(filters);
   let filterActive = filterStatus.filter(e => e.classList[0] === 'active');
-  let todo; 
+  let todo;
+  let todoPending; 
   if (selectedTask.checked) {
+    clearAll.style.opacity = '1';
     taskName.classList.add("checked");
     // updating the status of selected task to completed
     todos[selectedTask.id].status = "completed";
@@ -137,6 +160,11 @@ function updateStatus(selectedTask) {
     iTaskInput.classList.add('tick-all');
   } else {
     iTaskInput.classList.remove('tick-all');
+  }
+  // fix clear all
+  todoPending = todos.filter( todoPending => todoPending.status === "pending");
+  if (todoPending.length === todos.length) {
+    clearAll.style.opacity = '0';
   }
   // fix bug active
   if (filterActive[0].id === "completed" && selectedTask.checked === false){
