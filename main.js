@@ -173,7 +173,7 @@ function updateStatus(selectedTask) {
     iTaskInput.classList.remove('tick-all');
   }
   // fix clear all
-  todoPending = todos.filter( todoPending => todoPending.status === "pending");
+  todoPending = todos.filter(todoPending => todoPending.status === "pending");
   if (todoPending.length === todos.length) {
     clearAll.style.opacity = '0';
   }
