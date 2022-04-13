@@ -44,6 +44,12 @@ body {
     transform: translate(20px, -50%);
     opacity: 0.5;
     display: none;
+    cursor: pointer;
+    font-size: 2rem;
+    left: 4%;
+}
+.task-input i.tick-all {
+  opacity: 1;
 }
 
 .task-input input {
@@ -89,6 +95,7 @@ body {
     background: #49a196;
     cursor: pointer;
     font-size: 13px;
+    opacity: 0;
 }
 
 .task-box{
@@ -106,18 +113,33 @@ body {
     border-bottom: 1px solid #ccc;
 }
 
+.task > div {
+  position: relative;
+}
+
+.task div > span input {
+  width: 25rem;
+  height: 2.3rem;
+  position: absolute;
+  top: -14px;
+  font-size: 20px;
+  padding-left: 10px;
+  opacity: 0.5;
+  left: 52%;
+}
 
 .task-box .task:last-child {
     margin-bottom: 0;
 }
 
-.task label {
+.task div {
     display: flex;
 }
 
-.task label input {
+.task div input {
     margin-top: 6px;
-    margin-right: 20px;
+    margin-right: 24px;
+    margin-left: 20px;
 }
 
 .task-close {
@@ -125,16 +147,15 @@ body {
 }
 
 .task-close i {
-    display: none;
+    opacity: 0;
     padding: 5px 0;
     margin-right: 10px;
 }
 
 .task-box .task:hover i {
-    display: flex;
+    opacity: 1;
 }
-
-.completed {
+.checked {
     text-decoration: line-through;
     opacity: 0.5;
 }
