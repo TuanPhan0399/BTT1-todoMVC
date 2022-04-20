@@ -103,7 +103,7 @@ function editSpan(input) {
   const taskClose = span.parentElement.parentElement.lastElementChild;
   let tickInput = span.parentElement.firstElementChild;
   input.addEventListener('keyup', function (event) {
-    if (event.keyCode === 13) {
+    if (event.keyCode === 13 && input.value.trim()) {
       event.preventDefault();
       span.innerText = input.value.trim();
       input.style.display = "none";
@@ -116,7 +116,8 @@ function editSpan(input) {
   });
   // add onblur
   input.addEventListener('blur', (event) => {
-    event.preventDefault();
+    if (input.value.trim()) {
+      event.preventDefault();
       span.innerText = input.value.trim();
       input.style.display = "none";
       // fix bug edit input and task close;
@@ -124,6 +125,7 @@ function editSpan(input) {
       tickInput.style.opacity = '1';
       todos[span.classList[0]].name = span.innerText;
       localStorage.setItem("todo-list", JSON.stringify(todos));
+    }
   })
 }
 
@@ -152,7 +154,7 @@ function updateStatus(selectedTask) {
   const filterStatus = Array.from(filters);
   let filterActive = filterStatus.filter(e => e.classList[0] === 'active');
   let todo;
-  let todoPending; 
+  let todoPending;
   if (selectedTask.checked) {
     clearAll.style.opacity = '1';
     taskName.classList.add("checked");
@@ -207,7 +209,7 @@ function saveTask(event) {
     taskInput.value = "";
     localStorage.setItem("todo-list", JSON.stringify(todos));
     showTodo(idFilter);
-  } 
+  }
 }
 
 function clearAllCompleted () {
