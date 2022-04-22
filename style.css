@@ -134,12 +134,20 @@ body {
 
 .task div {
     display: flex;
+    align-items: center;
 }
 
 .task div input {
-    margin-top: 6px;
-    margin-right: 24px;
     margin-left: 20px;
+}
+
+.task div input[type="text"] {
+  height: 2.9rem;
+  width: 25rem;
+  font-size: 1.8rem;
+  border: none;
+  background: #fff;
+  outline: none;
 }
 
 .task-close {
@@ -147,9 +155,12 @@ body {
 }
 
 .task-close i {
+    position: absolute;
     opacity: 0;
     padding: 5px 0;
-    margin-right: 10px;
+    margin-right: 7px;
+    font-size: 1.9rem;
+    left: -2rem;
 }
 
 .task-box .task:hover i {

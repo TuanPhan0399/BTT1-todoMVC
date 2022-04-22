@@ -46,7 +46,7 @@ function showTodo(filter) {
         li += `<li class="task">
                 <div>
                   <input onclick="updateStatus(this)" type="checkbox" id="${id}" ${isCompleted}>
-                  <span ondblclick="editTask(this)" class="${id} ${isCompleted}">${todo.name}</span>
+                  <input ondblclick="editTask(this)" type="text" value="${todo.name}" class="${id} ${isCompleted}" readOnly>
                 </div>
                 <div class="task-close">
                   <i onclick="deleteTask(${id})" class="fa-solid fa-xmark"></i>
@@ -87,46 +87,79 @@ function deleteTask(deleteId) {
 }
 
 // data editing function
-function editTask(span) {
-  const taskClose = span.parentElement.parentElement.lastElementChild;
-  const input = span.parentElement.firstElementChild;
+function editTask(input) {
+  const taskClose = input.parentElement.parentElement.lastElementChild;
+  const inputCheck = input.parentElement.firstElementChild;
+  const id = input.classList[0];
   taskClose.style.opacity = '0';
-  input.style.opacity = '0';
-  let valueInput = span.innerText;
-  span.innerText = "";
-  span.innerHTML += `<input onclick="editSpan(this)" type="text" value="${valueInput}"></input>`;
-}
-
-// new data editting add with local
-function editSpan(input) {
-  const span = input.parentElement;
-  const taskClose = span.parentElement.parentElement.lastElementChild;
-  let tickInput = span.parentElement.firstElementChild;
-  input.addEventListener('keyup', function (event) {
-    if (event.keyCode === 13 && input.value.trim()) {
-      event.preventDefault();
-      span.innerText = input.value.trim();
-      input.style.display = "none";
-      // fix bug edit input and task close;
-      taskClose.style.opacity = '1';
-      tickInput.style.opacity = '1';
-      todos[span.classList[0]].name = span.innerText;
+  inputCheck.style.opacity = '0';
+  input.style.border = "1px solid #999";
+  input.readOnly = false;
+  input.setSelectionRange(input.value.length, input.value.length);
+  if (input.classList.contains('checked')) {
+    input.classList.remove('checked');
+    input.addEventListener('keyup', function (event) {
+      if (event.keyCode === 13 && input.value.trim()) {
+        event.preventDefault();
+        // fix bug edit input and task close;
+        taskClose.style.opacity = '1';
+        inputCheck.style.opacity = '1';
+        todos[input.classList[0]].name = input.value.trim();
+        input.classList.add('checked');
+        localStorage.setItem("todo-list", JSON.stringify(todos));
+        showTodo(idFilter);
+      } else if (event.keyCode === 13 && input.value === "") {
+        todos.splice(id, 1);
+        localStorage.setItem("todo-list", JSON.stringify(todos));
+        showTodo(idFilter);
+      }
+    });
+    // add onblur
+    input.addEventListener('blur', (event) => {
+      if (input.value.trim()) {
+        event.preventDefault();
+        // fix bug edit input and task close;
+        taskClose.style.opacity = '1';
+        inputCheck.style.opacity = '1';
+        todos[input.classList[0]].name = input.value.trim();
+        input.classList.add('checked');
+      } else {
+        todos.splice(id, 1);
+      }
       localStorage.setItem("todo-list", JSON.stringify(todos));
-    }
-  });
-  // add onblur
-  input.addEventListener('blur', (event) => {
-    if (input.value.trim()) {
-      event.preventDefault();
-      span.innerText = input.value.trim();
-      input.style.display = "none";
-      // fix bug edit input and task close;
-      taskClose.style.opacity = '1';
-      tickInput.style.opacity = '1';
-      todos[span.classList[0]].name = span.innerText;
+      showTodo(idFilter);
+    })
+  } else {
+    input.addEventListener('keyup', function (event) {
+      if (event.keyCode === 13 && input.value.trim()) {
+        event.preventDefault();
+        // fix bug edit input and task close;
+        taskClose.style.opacity = '1';
+        inputCheck.style.opacity = '1';
+        todos[input.classList[0]].name = input.value.trim();
+        localStorage.setItem("todo-list", JSON.stringify(todos));
+        showTodo(idFilter);
+      } else if (event.keyCode === 13 && input.value === "") {
+        todos.splice(id, 1);
+        localStorage.setItem("todo-list", JSON.stringify(todos));
+        showTodo(idFilter);
+      }
+    });
+    // add onblur
+    input.addEventListener('blur', (event) => {
+      if (input.value.trim()) {
+        event.preventDefault();
+        // fix bug edit input and task close;
+        taskClose.style.opacity = '1';
+        inputCheck.style.opacity = '1';
+        todos[input.classList[0]].name = input.value.trim();
+      } else {
+        todos.splice(id, 1);
+      }
       localStorage.setItem("todo-list", JSON.stringify(todos));
-    }
-  })
+      showTodo(idFilter);
+    })
+  }
 }
 
 // Select all input
